@@ -1,10 +1,10 @@
-#include "testleaderwx.hpp"
+#include "clashdomeldb.hpp"
 
 // An action for creating new leader board
 // owner - owner's wax account
 // boardname - name for leaderboard
 // gameid - id of owner's game
-void testleaderwx::createlboard(uint64_t id, string date, string game)
+void clashdomeldb::createlboard(uint64_t id, string date, string game)
 {
     require_auth(_self);
 
@@ -23,7 +23,7 @@ void testleaderwx::createlboard(uint64_t id, string date, string game)
 // An action for removing leaderboard from table
 // owner - owner wax account
 // boardid - leaderboard id on table lboards
-void testleaderwx::removelboard(uint64_t boardid)
+void clashdomeldb::removelboard(uint64_t boardid)
 {
     require_auth(_self);
 
@@ -39,7 +39,7 @@ void testleaderwx::removelboard(uint64_t boardid)
 // owner - owner wax account
 // boardid - leaderboard id on table lboards
 // resetpool - 0: pot on leaderboard stay current, 1: pot on leaderboard change to 0
-void testleaderwx::resetlboard(uint64_t boardid)
+void clashdomeldb::resetlboard(uint64_t boardid)
 {
     require_auth(_self);
 
@@ -58,7 +58,7 @@ void testleaderwx::resetlboard(uint64_t boardid)
 // boardid - leaderboard id on table lboards
 // username - user's wax account
 // point - number of points to add
-void testleaderwx::updatelboard(uint64_t boardid, eosio::name username, uint64_t points)
+void clashdomeldb::updatelboard(uint64_t boardid, eosio::name username, uint64_t points, uint64_t upload_time)
 {
     require_auth(_self);
 
@@ -75,7 +75,8 @@ void testleaderwx::updatelboard(uint64_t boardid, eosio::name username, uint64_t
         _lb.modify(lb_itr, get_self(), [&](auto &mod_board) {
             mod_board.players.push_back({
                 username,
-                points
+                points,
+                upload_time
             });
             while (pos != 0)
             {
@@ -111,8 +112,14 @@ void testleaderwx::updatelboard(uint64_t boardid, eosio::name username, uint64_t
 
                     pos--;
                 }
-                else
+                else if (mod_board.players.at(pos).upload_time < mod_board.players.at(pos - 1).upload_time)
                 {
+                    helper = mod_board.players.at(pos);
+                    mod_board.players.at(pos) = mod_board.players.at(pos - 1);
+                    mod_board.players.at(pos - 1) = helper;
+
+                    pos--;
+                } else {
                     break;
                 }
             }
@@ -120,7 +127,7 @@ void testleaderwx::updatelboard(uint64_t boardid, eosio::name username, uint64_t
     }
 }
 
-uint64_t testleaderwx::finder(vector<player_s> players, eosio::name username)
+uint64_t clashdomeldb::finder(vector<player_s> players, eosio::name username)
 {
     for (uint64_t i = 0; i < players.size(); i++)
     {
@@ -138,7 +145,7 @@ extern "C" void apply(uint64_t receiver, uint64_t code, uint64_t action)
   {
     switch (action)
     {
-      EOSIO_DISPATCH_HELPER(testleaderwx, (createlboard)(resetlboard)(removelboard)(updatelboard))
+      EOSIO_DISPATCH_HELPER(clashdomeldb, (createlboard)(resetlboard)(removelboard)(updatelboard))
     }
   }
   else

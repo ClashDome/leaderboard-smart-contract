@@ -9,16 +9,16 @@
 
 using namespace std;
 
-#define CONTRACTN eosio::name("testleaderwx");
+#define CONTRACTN eosio::name("clashdomeldb")
 
-CONTRACT testleaderwx : public eosio::contract {
+CONTRACT clashdomeldb : public eosio::contract {
   public:
     using contract::contract;
 
     ACTION createlboard(uint64_t id, string date, string game);
     ACTION resetlboard(uint64_t boardid);
     ACTION removelboard(uint64_t boardid);
-    ACTION updatelboard(uint64_t boardid, eosio::name username, uint64_t points);
+    ACTION updatelboard(uint64_t boardid, eosio::name username, uint64_t points, uint64_t upload_time);
 
   private:
 
@@ -26,6 +26,7 @@ CONTRACT testleaderwx : public eosio::contract {
     {
       eosio::name account;      //user wax account
       uint64_t points;          //user points
+      uint64_t upload_time;     //score upload moment  
     };
 
     TABLE lboard {
@@ -40,7 +41,7 @@ CONTRACT testleaderwx : public eosio::contract {
 
   public:
   
-  testleaderwx(eosio::name receiver, eosio::name code, eosio::datastream<const char *> ds) : contract(receiver, code, ds) {}
+  clashdomeldb(eosio::name receiver, eosio::name code, eosio::datastream<const char *> ds) : contract(receiver, code, ds) {}
   uint64_t finder(vector<player_s> players, eosio::name username);
    
 };

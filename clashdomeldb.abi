@@ -54,6 +54,10 @@
                 {
                     "name": "points",
                     "type": "uint64"
+                },
+                {
+                    "name": "upload_time",
+                    "type": "uint64"
                 }
             ]
         },
@@ -91,6 +95,10 @@
                 },
                 {
                     "name": "points",
+                    "type": "uint64"
+                },
+                {
+                    "name": "upload_time",
                     "type": "uint64"
                 }
             ]
