@@ -101,6 +101,7 @@ void clashdomeldb::updatelboard(uint64_t boardid, eosio::name username, uint64_t
         _lb.modify(lb_itr, get_self(), [&](auto &mod_board) {
             if (points > mod_board.players.at(pos).points) {
                 mod_board.players.at(pos).points = points;
+                mod_board.players.at(pos).upload_time = upload_time;
             }
             while (pos != 0)
             {
