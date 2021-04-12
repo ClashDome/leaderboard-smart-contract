@@ -11,7 +11,7 @@ void clashdomeldb::createlboard(uint64_t id, string date, string game)
     lboards _lb(CONTRACTN, CONTRACTN.value);
 
     auto lb_itr = _lb.find(id);
-    eosio::check(lb_itr == _lb.end(), "Leader board with " + to_string(id) + " id already exists!");
+    eosio::check(lb_itr == _lb.end(), "Leaderboard with " + to_string(id) + " id already exists!");
 
     _lb.emplace(CONTRACTN, [&](auto& new_board) {
         new_board.id = id;
@@ -30,7 +30,7 @@ void clashdomeldb::removelboard(uint64_t boardid)
     lboards _lb(CONTRACTN, CONTRACTN.value);
 
     auto lb_itr = _lb.find(boardid);
-    eosio::check(lb_itr != _lb.end(), "Leader board with " + to_string(boardid) + " id doesn't exist!");
+    eosio::check(lb_itr != _lb.end(), "Leaderboard with " + to_string(boardid) + " id doesn't exist!");
 
     _lb.erase(lb_itr);
 }
@@ -46,7 +46,7 @@ void clashdomeldb::resetlboard(uint64_t boardid)
     lboards _lb(CONTRACTN, CONTRACTN.value);
 
     auto lb_itr = _lb.find(boardid);
-    eosio::check(lb_itr != _lb.end(), "Leader board with " + to_string(boardid) + " id doesn't exist!");
+    eosio::check(lb_itr != _lb.end(), "Leaderboard with " + to_string(boardid) + " id doesn't exist!");
 
     _lb.modify(lb_itr, get_self(), [&](auto &mod_board) {
         mod_board.players.clear();
@@ -65,7 +65,7 @@ void clashdomeldb::updatelboard(uint64_t boardid, eosio::name username, uint64_t
     lboards _lb(CONTRACTN, CONTRACTN.value);
 
     auto lb_itr = _lb.find(boardid);
-    eosio::check(lb_itr != _lb.end(), "Leader board with " + to_string(boardid) + " id doesn't exist!");
+    eosio::check(lb_itr != _lb.end(), "Leaderboard with " + to_string(boardid) + " id doesn't exist!");
 
     uint64_t pos = finder(lb_itr->players, username);
     if (pos == -1)
